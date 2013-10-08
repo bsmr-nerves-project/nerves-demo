@@ -12,11 +12,6 @@
 
 <h2>Beaglebone LEDs</h2>
 
-<p>led0={{led0}}</p>
-<p>led1={{led1}}</p>
-<p>led2={{led2}}</p>
-<p>led3={{led3}}</p>
-
 <p>Check one or more:</p>
 
 <form action="{{ url.base }}" method="post">
