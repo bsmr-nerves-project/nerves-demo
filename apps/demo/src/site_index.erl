@@ -12,23 +12,46 @@ init(_TransportAndProtocol, Req, _Options) ->
 
 boolean_from_form(Key, Props) ->
     case proplists:get_value(Key, Props, <<"">>) of
-	<<"on">> -> true;
-	_ -> false
+	<<"on">> -> on;
+	_ -> off
     end.
     
+brightness_to_onoff(0) -> off;
+brightness_to_onoff(_) -> on.
+onoff_to_brightness(on) -> 1;
+onoff_to_brightness(off) -> 0.
+
+get_current_state() ->
+    {ok, Led0} = led:brightness("beaglebone:green:usr0"),
+    {ok, Led1} = led:brightness("beaglebone:green:usr1"),
+    {ok, Led2} = led:brightness("beaglebone:green:usr2"),
+    {ok, Led3} = led:brightness("beaglebone:green:usr3"),
+    [{led0, brightness_to_onoff(Led0)},
+     {led1, brightness_to_onoff(Led1)},
+     {led2, brightness_to_onoff(Led2)},
+     {led3, brightness_to_onoff(Led3)}].
+
+set_state(Props) ->
+    io:format("Got Props: ~p~n", [Props]),
+    Led0 = boolean_from_form(<<"led0">>, Props),
+    Led1 = boolean_from_form(<<"led1">>, Props),
+    Led2 = boolean_from_form(<<"led2">>, Props),
+    Led3 = boolean_from_form(<<"led3">>, Props),
+    ok = led:set_brightness("beaglebone:green:usr0", onoff_to_brightness(Led0)),
+    ok = led:set_brightness("beaglebone:green:usr1", onoff_to_brightness(Led1)),
+    ok = led:set_brightness("beaglebone:green:usr2", onoff_to_brightness(Led2)),
+    ok = led:set_brightness("beaglebone:green:usr3", onoff_to_brightness(Led3)).
+    
 handle(Req, State) ->
-    io:format("State=~p~n", [State]),
     case cowboy_req:method(Req) of
 	{<<"GET">>,_Req} ->
-	    {ok, Req2} = serve_page(index_tpl, [{onoff,State#state.onoff}], Req),
+	    {ok, Req2} = serve_page(index_tpl, get_current_state(), Req),
 	    {ok, Req2, State};
 	{<<"POST">>,_Req} ->
 	    {ok, Props, _Req2} = cowboy_req:body_qs(Req),
-	    NewOnoff = boolean_from_form(<<"onoff">>, Props),
-	    State2 = State#state{onoff=NewOnoff},
-	    {ok, Req2} = serve_page(index_tpl, [{onoff,NewOnoff}], Req),
-	    io:format("State2=~p~n", [State2]),
-	    {ok, Req2, State2}
+	    set_state(Props),
+	    {ok, Req2} = serve_page(index_tpl, get_current_state(), Req),
+	    {ok, Req2, State}
     end.
 	    
 

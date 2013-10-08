@@ -205,7 +205,7 @@ a.feedname { underline: none }
 
   <body>
     <header>
-          <h1><a href="{{ url.base }}" title="home">Web control demo</a></h1>
+          <h1><a href="{{ url.base }}" title="home">Embedded Erlang Demo</a></h1>
     </header>
     {% block nav %}{% endblock %}
 

@@ -7,7 +7,8 @@
                   kernel,
                   stdlib,
 		  erlydtl,
-		  cowboy
+		  cowboy,
+		  leds
                  ]},
   {mod, { demo_app, []}},
   {env, [
