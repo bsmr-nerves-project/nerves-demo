@@ -21,17 +21,17 @@ start(_StartType, _StartArgs) ->
     os:cmd("/sbin/ip route add default via 192.168.1.1"),
 
     % Initialize the leds
-    led:open("beaglebone:green:usr0"),
-    led:open("beaglebone:green:usr1"),
-    led:open("beaglebone:green:usr2"),
-    led:open("beaglebone:green:usr3"),
-    led:disable_triggers("beaglebone:green:usr0"),
-    led:disable_triggers("beaglebone:green:usr1"),
-    led:disable_triggers("beaglebone:green:usr2"),
-    led:disable_triggers("beaglebone:green:usr3"),
+    led:open('beaglebone:green:usr0'),
+    led:open('beaglebone:green:usr1'),
+    led:open('beaglebone:green:usr2'),
+    led:open('beaglebone:green:usr3'),
+    led:disable_triggers('beaglebone:green:usr0'),
+    led:disable_triggers('beaglebone:green:usr1'),
+    led:disable_triggers('beaglebone:green:usr2'),
+    led:disable_triggers('beaglebone:green:usr3'),
 
     % Start up cowboy
-    Dispatch = cowboy_router:compile([                
+    Dispatch = cowboy_router:compile([
 	      {'_', [
 		     {"/", site_index, []}
 		    ]}

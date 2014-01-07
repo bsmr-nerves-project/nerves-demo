@@ -48,10 +48,10 @@ onoff_to_brightness(on) -> 1;
 onoff_to_brightness(off) -> 0.
 
 get_current_state() ->
-    {ok, Led0} = led:brightness("beaglebone:green:usr0"),
-    {ok, Led1} = led:brightness("beaglebone:green:usr1"),
-    {ok, Led2} = led:brightness("beaglebone:green:usr2"),
-    {ok, Led3} = led:brightness("beaglebone:green:usr3"),
+    {ok, Led0} = led:brightness('beaglebone:green:usr0'),
+    {ok, Led1} = led:brightness('beaglebone:green:usr1'),
+    {ok, Led2} = led:brightness('beaglebone:green:usr2'),
+    {ok, Led3} = led:brightness('beaglebone:green:usr3'),
     [{led0, brightness_to_onoff(Led0)},
      {led1, brightness_to_onoff(Led1)},
      {led2, brightness_to_onoff(Led2)},
@@ -63,8 +63,8 @@ set_state(Props) ->
     Led1 = boolean_from_form(<<"led1">>, Props),
     Led2 = boolean_from_form(<<"led2">>, Props),
     Led3 = boolean_from_form(<<"led3">>, Props),
-    ok = led:set_brightness("beaglebone:green:usr0", onoff_to_brightness(Led0)),
-    ok = led:set_brightness("beaglebone:green:usr1", onoff_to_brightness(Led1)),
-    ok = led:set_brightness("beaglebone:green:usr2", onoff_to_brightness(Led2)),
-    ok = led:set_brightness("beaglebone:green:usr3", onoff_to_brightness(Led3)).
+    ok = led:set_brightness('beaglebone:green:usr0', onoff_to_brightness(Led0)),
+    ok = led:set_brightness('beaglebone:green:usr1', onoff_to_brightness(Led1)),
+    ok = led:set_brightness('beaglebone:green:usr2', onoff_to_brightness(Led2)),
+    ok = led:set_brightness('beaglebone:green:usr3', onoff_to_brightness(Led3)).
     
