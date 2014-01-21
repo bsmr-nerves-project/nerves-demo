@@ -1,17 +1,17 @@
 %%%-------------------------------------------------------------------
-%%% @author Frank Hunleth <fhunleth@halfmarathon>
+%%% @author Frank Hunleth <fhunleth@troodon-software.com>
 %%% @copyright (C) 2013, Frank Hunleth
 %%% @doc
 %%%
 %%% @end
 %%% Created :  5 Sep 2013 by Frank Hunleth <fhunleth@halfmarathon>
 %%%-------------------------------------------------------------------
--module(simple_demo).
+-module(nerves_demo).
 
 -behaviour(gen_server).
 
 %% API
--export([start_link/0]).
+-export([start_link/0, set_led/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -24,6 +24,9 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
+
+set_led(LedNumber, Value) ->
+    gen_server:cast(?SERVER, {set_led, LedNumber, Value}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -51,8 +54,17 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    io:format("Initializing simple_demo...~n", []),
-    timer:send_interval(5000, timeout),
+    io:format("Nerves demonstration started...~n", []),
+
+    % Initialize the leds
+    led:open('beaglebone:green:usr0'),
+    led:open('beaglebone:green:usr1'),
+    led:open('beaglebone:green:usr2'),
+    led:open('beaglebone:green:usr3'),
+    led:disable_triggers('beaglebone:green:usr0'),
+    led:disable_triggers('beaglebone:green:usr1'),
+    led:disable_triggers('beaglebone:green:usr2'),
+    led:disable_triggers('beaglebone:green:usr3'),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -83,7 +95,8 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast(_Msg, State) ->
+handle_cast({set_led, LedNumber, Value}, State) ->
+    led:set_brightness(number_to_name(LedNumber), Value),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
@@ -96,9 +109,6 @@ handle_cast(_Msg, State) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_info(timeout, State) ->
-%%    io:format("Hello~n", []),
-    {noreply, State};
 handle_info(_Info, State) ->
     {noreply, State}.
 
@@ -130,3 +140,7 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+number_to_name(0) -> 'beaglebone:green:usr0';
+number_to_name(1) -> 'beaglebone:green:usr1';
+number_to_name(2) -> 'beaglebone:green:usr2';
+number_to_name(3) -> 'beaglebone:green:usr3'.

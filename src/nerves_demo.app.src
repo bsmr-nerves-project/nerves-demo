@@ -1,0 +1,15 @@
+{application, nerves_demo,
+ [
+  {description, "Nerves Demonstration Application"},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib,
+                  cowboy,
+		  jsx,
+		  leds
+                 ]},
+  {mod, { nerves_demo_app, []}},
+  {env, []}
+ ]}.
