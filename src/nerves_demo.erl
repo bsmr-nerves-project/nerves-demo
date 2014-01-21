@@ -57,14 +57,14 @@ init([]) ->
     io:format("Nerves demonstration started...~n", []),
 
     % Initialize the leds
-    led:open('beaglebone:green:usr0'),
-    led:open('beaglebone:green:usr1'),
-    led:open('beaglebone:green:usr2'),
-    led:open('beaglebone:green:usr3'),
-    led:disable_triggers('beaglebone:green:usr0'),
-    led:disable_triggers('beaglebone:green:usr1'),
-    led:disable_triggers('beaglebone:green:usr2'),
-    led:disable_triggers('beaglebone:green:usr3'),
+    Leds = ['beaglebone:green:usr0', 'beaglebone:green:usr1',
+	    'beaglebone:green:usr2', 'beaglebone:green:usr3'],
+    lists:foreach(fun(Led) ->
+			  led:start_link(Led),
+			  led:disable_triggers(Led),
+			  led:set_brightness(Led, 0)
+		  end,
+		  Leds),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
