@@ -7,8 +7,9 @@
                   kernel,
                   stdlib,
                   cowboy,
-		  jsx,
-		  leds
+                  jsx,
+	              leds,
+	              nerves_utils
                  ]},
   {mod, { nerves_demo_app, []}},
   {env, []}
