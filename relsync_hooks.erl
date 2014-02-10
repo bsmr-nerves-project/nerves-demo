@@ -3,14 +3,8 @@
 -export([presync/0, postsync/0]).
 
 presync() ->
-    io:format("Handling presync~n"),
-
-    % Mount read-write so that we can update files
-    mount:remount("/", [rw]).
+    io:format("Handling presync~n").
 
 postsync() ->
-    io:format("Handling postsync~n"),
+    io:format("Handling postsync~n").
 
-    % Remount as read-only so that the system
-    % is like it normally is.
-    mount:remount("/", [ro]).
