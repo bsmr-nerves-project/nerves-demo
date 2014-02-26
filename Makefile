@@ -1,37 +1,21 @@
+PROJECT = nerves_demo
 
-SDCARD_LOCATION=/dev/sdc
+DEPS = cowboy jsx nerves_utils leds
+dep_cowboy = pkg://cowboy master
+dep_jsx = pkg://jsx v1.4.3
+dep_nerves_utils = git://github.com/nerves-project/nerves-utils erlang.mk
+dep_leds = git://github.com/nerves-project/leds erlang.mk
 
-DIALYZER_OPTS = -Wrace_conditions -Wunderspecs
+RELX_OPTS += --system_libs $(NERVES_SDK_SYSROOT)/usr/lib/erlang/lib
 
-all:
-	rebar get-deps compile
+firmware: rel
 	if [ -n "$(NERVES_ROOT)" ]; then $(NERVES_ROOT)/scripts/rel2fw.sh _rel; fi
 
-relsync:
-	rebar compile
-	../relsync/relsync --destnode demo@nerves --hooks relsync_hooks.erl --cookie democookie --sname relsync
+clean-firmware:
+	-rm -fr _images
 
-burn:
-	sudo env PATH=$(PATH) fwtool -t complete -d $(SDCARD_LOCATION) run _images/bbb.fw
+clean-all: clean-firmware
 
-DEPSOLVER_PLT=$(CURDIR)/.depsolver_plt
-ERLANG_APPS=erts kernel stdlib crypto public_key mnesia ssl
+include erlang.mk
 
-$(DEPSOLVER_PLT):
-		dialyzer --output_plt $(DEPSOLVER_PLT) --build_plt \
-					--apps $(ERLANG_APPS) -r deps
 
-dialyzer: $(DEPSOLVER_PLT)
-		dialyzer --plt $(DEPSOLVER_PLT) $(DIALYZER_OPTS) --src src
-
-typer: $(DEPSOLVER_PLT)
-		typer --plt $(DEPSOLVER_PLT) -r ./src
-
-clean:
-	rebar clean
-	-rm -fr _rel _images
-
-distclean:
-	-rm -fr _rel _images ebin deps $(DEPSOLVER_PLT)
-
-.PHONY: dialyzer typer clean distclean burn

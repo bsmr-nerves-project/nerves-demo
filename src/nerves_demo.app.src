@@ -3,6 +3,7 @@
   {description, "Nerves Demonstration Application"},
   {vsn, "1"},
   {registered, []},
+  {modules, []},
   {applications, [
                   kernel,
                   stdlib,

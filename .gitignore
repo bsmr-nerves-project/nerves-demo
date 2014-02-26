@@ -4,3 +4,4 @@ _rel
 _images
 *~
 .depsolver_plt
+.erlang.mk.packages.v1
